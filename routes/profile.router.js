@@ -18,7 +18,7 @@ const upload = multer({
         }
         cb(null, true);
     },
-}).single("profile_picture");
+}).single("image");
 
 router.get("/", find);
 router.post("/", upload, create);

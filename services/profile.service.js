@@ -6,9 +6,9 @@ module.exports = {
         try {
             await connection.beginTransaction();
             const fetchResult = await connection.query(
-                `SELECT username, email, password,Age,profile_picture,Role,
-                CONCAT('http://localhost:3000/upload/',profile_picture) AS profile_picture
-                FROM users`,
+                `SELECT image,
+                CONCAT('http://localhost:3000/api/cnrps/upload/',image) AS image
+                FROM pictures`,
             );
             await connection.commit();
             return fetchResult[0];
@@ -23,21 +23,17 @@ module.exports = {
         try {
             await connection.beginTransaction();
             const queryResult = await connection.query(
-                `insert into users
-                (username, email, password,Age,profile_picture,Role)
-                values(?,?,?,?,?,?)`, [
-                    data.username,
-                    data.email,
-                    data.password,
-                    data.Age,
-                    data.profile_picture,
-                    data.Role
+                `insert into pictures
+                (image)
+                values(?)`, [
+                    
+                    data.image
                 ]
             );
             const fetchResult = await connection.query(
-                `SELECT username, email, password,Age,profile_picture,Role,
-                CONCAT('http://localhost:3000/upload/',profile_picture) AS profile_picture
-                FROM users WHERE id = ?`, [queryResult[0].insertId]
+                `SELECT image,
+                CONCAT('http://localhost:3000/api/cnrps/upload/',image) AS image
+                FROM pictures WHERE id = ?`, [queryResult[0].insertId]
             );
             await connection.commit();
             return fetchResult[0][0];
@@ -47,24 +43,5 @@ module.exports = {
             connection.release();
         }
     },
-    // update: async(req, res ) =>{
-    //     try {
-    //         const { username,email,Age,profile_picture} = req.body;
-    //         const { id } = req.params;
-    //         const sql = "UPDATE users SET username = ?, email=?, Age=?, profile_picture=? WHERE id = ?";
-    //         const [rows, fields] = await pool.query(sql, [username,email,Age,profile_picture, id]);
-    //         res.json({
-    //           data: rows,
-    //           message: 'Profile updated successfully'
-    //         });
-    //       } catch (error) {
-    //         console.log(error);
-    //         res.json({
-    //           status: "error"
-    //         });
-    //       }
-    //   }
-       
-      
  
 }

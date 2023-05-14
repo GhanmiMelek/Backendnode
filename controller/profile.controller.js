@@ -14,27 +14,12 @@ const profileController = {
       }
   },
   create: async(req, res) => {
-      try {
-          var data = req.body;
-          if (req.file)
-              data["profile_picture"] = req.file.filename;
-
-          const result = await create(data);
-          return res.status(201).json(result);
-      } catch (e) {
-          return res.status(500).json({
-              "message": "Internal Server Error"
-          });
-      }
-  },
-  update: async(req, res) => {
     try {
         var data = req.body;
-        const { id } = req.params;
         if (req.file)
-            data["profile_picture"] = req.file.filename;
+        data["image"] = req.file.filename;
 
-        const result = await update(data,id);
+        const result = await create(data);
         return res.status(201).json(result);
     } catch (e) {
         return res.status(500).json({
@@ -42,8 +27,10 @@ const profileController = {
         });
     }
 }
+
   
 
 };
 
 module.exports = profileController
+
