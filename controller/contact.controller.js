@@ -12,7 +12,7 @@ const contactController = {
       const number = req.body.number;
       const subject = req.body.subject;
       const message = req.body.message;
-      emailSenderFunction(message,"ghanmimelek72@gmail.com")
+      emailSenderFunction(username, email, message,"cnrps.adm@gmail.com");
   
       // insert the message into the contacts table
       const sql = `INSERT INTO contacts (username, email,number, subject, message) VALUES (?, ?, ?, ? , ?)`;
@@ -55,36 +55,52 @@ const contactController = {
                 status: "error"
             })
          }
+    }, 
+    resolve: async (req, res) => {
+      try {
+        const { id } = req.params;
+        const [rows, fields] = await pool.query("UPDATE contacts SET resolved = 1 WHERE id = ?", [id]);
+        res.json({
+          data: rows
+        });
+      } catch (error) {
+        console.log(error);
+        res.json({
+          status: "error"
+        });
+      }
     }
+    
 }
 
 
-function emailSenderFunction(message,target){
-  const transporter = nodemailer.createTransport({
+function emailSenderFunction(username, email,message,target){
+  const transport = nodemailer.createTransport({
     port: 465,               
     host: "smtp.gmail.com",
       auth: {
             user: process.env.EMAIL,
             pass: process.env.PASSWORD,
         },
-        tls: {
-          rejectUnauthorized: false
-         }
-        ,
+        
     secure: true,
     });
 
 
   const mailData = {
-    from: 'info.CNRPS@gmail.com',  
+    from: email,  // sender address
       to: target,   
       subject: 'CNRPS',
       text: 'CNRPS USERS',
-      html:"<h4>Cet utilisateur a un problème. </h4><br><h3> CNRPS : "+message+"</h3>"
-    };
+      html: `<h3>User Details:</h3><br>
+            <h4>username: ${username}</h4>
+            <h4>email: ${email}</h4>
+            <h3>subject:</h3>
+            <h4>${message}</h4>`,
+      };
 
 
-transporter.sendMail(mailData, function (err, info) {
+transport.sendMail(mailData, function (err, info) {
 if(err)
     console.log(err)
 else

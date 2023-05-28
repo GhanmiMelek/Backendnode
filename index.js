@@ -15,6 +15,8 @@ const authRouter = require('./routes/auth.router')
 const contactRouter = require('./routes/contact.router');
 const profileRouter = require('./routes/profile.router');
 
+
+
 app.use('/api/cnrps/upload', express.static('upload/images'));
 app.use("/api/cnrps/users", usersRouter)
 app.use("/api/cnrps/auth", authRouter)
