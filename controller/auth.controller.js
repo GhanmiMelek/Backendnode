@@ -28,7 +28,7 @@ const sendVerificationEmail = async (email, verificationLink) => {
         to: email,
         subject: 'Vérification de email',
         html: `<h3>Veuillez cliquer sur le lien suivant pour vérifier votre adresse e-mail :</h3>
-          <a href="${verificationLink}">${verificationLink}</a>`,
+        <a href="${verificationLink}" style="display: inline-block; background-color: #005eff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 25px;">Vérifier l'adresse e-mail</a>`,
       };
   
       // Send the email
@@ -174,7 +174,6 @@ const authController = {
         try {
             // delete the access token from the client side 
             res.clearCookie('accessToken'); // for cookies
-            // res.locals.accessToken = null; // for local storage
     
             return res.status(200).json({
                 message: 'Logout successful'
